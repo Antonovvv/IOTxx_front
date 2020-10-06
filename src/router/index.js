@@ -1,16 +1,20 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '../views/Home.vue';
+import Ground from '../views/Ground.vue';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home
-  },
-  {
+  }, {
+    path: '/ground',
+    name: 'Ground',
+    component: Ground,
+  }, {
     path: '/about',
     name: 'About',
     // route level code-splitting
