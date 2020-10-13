@@ -27,6 +27,9 @@
         
       </a-drawer>
     </a-drawer>
+
+    <div id="map" class="map"></div>
+    <!-- <a-button @click="getCenter">get</a-button> -->
   </div>
 </template>
 
@@ -43,11 +46,25 @@ export default {
     return {
       drawerVisible: false,
       deepDrawerVisible: false,
+      map: null,
       historyList: [
         '2020.10.13',
         '2020.10.12',
       ]
     };
+  },
+  mounted() {
+    if (window.TMap) {
+      const TMap = window.TMap;
+      const center = new TMap.LatLng(30.51283206177366, 114.43127457409332);
+      const map = new TMap.Map(document.getElementById('map'), {
+        center: center,
+        zoom: 19,
+        minZoom: 18,
+        maxZoom: 20,
+      });
+      this.map = map;
+    }
   },
   methods: {
     onDrawerShow() {
@@ -65,7 +82,11 @@ export default {
     onHistorySelect() {
       this.deepDrawerVisible = false;
       this.drawerVisible = false;
-    }
+    },
+    getCenter() {
+      var pos = this.map.getCenter();
+      console.log(pos);
+    },
   }
 }
 </script>
@@ -80,6 +101,11 @@ export default {
     position: fixed;
     left: 4px;
     top: 100px;
+  }
+  
+  .map {
+    width: 80vw;
+    height: 80vh;
   }
 }
 .history-list {
