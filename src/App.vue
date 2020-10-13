@@ -1,12 +1,23 @@
 <template>
   <div id="app">
-    <div id="nav">
+    <Nav />
+    <!-- <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/ground">Ground</router-link>
-    </div>
-    <router-view/>
+    </div> -->
+    <router-view id="container"/>
   </div>
 </template>
+
+<script>
+import Nav from './components/Navigator';
+
+export default {
+  components: {
+    Nav,
+  }  
+}
+</script>
 
 <style>
 #app {
@@ -15,6 +26,10 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+#container {
+
 }
 
 #nav {
