@@ -1,6 +1,6 @@
 <template>
   <div>
-    Ground
+    配置页面
   </div>
 </template>
 

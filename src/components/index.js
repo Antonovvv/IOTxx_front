@@ -12,6 +12,8 @@ const components = [
   Menu,
   Icon,
   Drawer,
+  List,
+  Form,
 ];
 
 const install = function (Vue, option) {
