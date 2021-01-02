@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Nav />
+    <Nav v-if="!isMobile" />
     <!-- <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/ground">Ground</router-link>
@@ -11,8 +11,14 @@
 
 <script>
 import Nav from './components/Navigator';
+import { getIsMobile } from './utils/config.js';
 
 export default {
+  data() {
+    return {
+      isMobile: getIsMobile(),
+    };
+  },
   components: {
     Nav,
   }  

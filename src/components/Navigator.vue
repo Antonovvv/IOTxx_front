@@ -2,11 +2,11 @@
   <div class="nav">
     <a-menu mode="horizontal" @select="onNavSelect">
       <a-menu-item key="home">
-        <a-icon type="home" />Home
+        <a-icon type="home" />主页
         <!-- <router-link to="/">Home</router-link> -->
       </a-menu-item>
-      <a-menu-item key="ground">
-        <a-icon type="table" />Ground
+      <a-menu-item key="config">
+        <a-icon type="table" />配置
         <!-- <router-link to="/ground">Ground</router-link> -->
       </a-menu-item>
     </a-menu>

@@ -3,10 +3,11 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue';
 import Config from '../views/Config.vue';
 import Record from '../views/Record.vue';
+import { getIsMobile } from '../utils/config.js';
 
 Vue.use(VueRouter);
 
-const redirectPath = /Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent) ? '/record' : '/home';
+const redirectPath = getIsMobile() ? '/record' : '/home';
 
 const routes = [
   {
