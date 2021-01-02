@@ -42,7 +42,7 @@ export default {
     brushColor: {
       // 画笔颜色
       type: String,
-      default: "red",
+      default: "black",
     },
     brushWidth: {
       // 画笔宽度
@@ -85,8 +85,8 @@ export default {
       this.context.lineCap = 'round';
       this.context.lineJoin = 'round';
 
-      this.context.fillStyle = "#e5efcb"
-      this.context.fillRect(0, 0, canvas.width, canvas.height);
+      // this.context.fillStyle = "rgba(255,255,255,0)"
+      // this.context.fillRect(0, 0, this.width, this.height);
     },
     canvasDown(e) {
       if (this.isDrawable) {
@@ -100,7 +100,7 @@ export default {
           y: canvasY,
           timestamp: new Date().getTime(),
         };
-        console.log(point);
+        console.log(e);
         this.brushPoints.push(point);
       }
     },
@@ -123,6 +123,7 @@ export default {
       if (this.isDrawable) {
         this.isDrawing = false;
         this.$emit('drawed', this.brushPoints);
+        this.brushPoints = [];
       }
     },
     // 绘制画笔轨迹
@@ -131,6 +132,10 @@ export default {
       this.context.lineTo(prevPoint.x, prevPoint.y);
       this.context.lineTo(currPoint.x, currPoint.y);
       this.context.stroke();
+    },
+    reset() {
+      const canvas = document.getElementById(this.randomId);
+      canvas.width = canvas.height;
     },
     // 绘制椭圆
     // drawEllipse(context, x, y, a, b) {
