@@ -60,13 +60,6 @@ export default {
       default: "circle",
     },
   },
-  watch: {
-    info(val) {
-      if (val) {
-        this.initDraw();
-      }
-    },
-  },
   data() {
     return {
       // 同一页面多次渲染时，用于区分元素的id
@@ -129,6 +122,7 @@ export default {
     canvasUp(e) {
       if (this.isDrawable) {
         this.isDrawing = false;
+        this.$emit('drawed', this.brushPoints);
       }
     },
     // 绘制画笔轨迹
@@ -150,12 +144,6 @@ export default {
     //   context.closePath();
     //   context.restore();
     // },
-    // 清空画布
-    clean() {
-      this.context.drawImage(this.img, 0, 0, this.width, this.height);
-      this.drawInfo = [];
-      if (this.info && this.info.length !== 0) this.drawWithInfo();
-    },
   },
 };
 </script>

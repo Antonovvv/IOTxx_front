@@ -2,6 +2,7 @@
   <div class="container">
     轨迹绘制
     <draw-canvas
+      @drawed="onCanvasDrawed"
       :width="canvasWidth" :height="canvasHeight"
       ref="drawCanvas"
     />
@@ -16,6 +17,7 @@ export default {
     return {
       canvasWidth: 300,
       canvasHeight: 150,
+      pointsList: [],
     }
   },
   components: {
@@ -27,6 +29,12 @@ export default {
     this.$nextTick(() => {
       this.$refs.drawCanvas.init();
     });
+  },
+  methods: {
+    onCanvasDrawed(brushPoints) {
+      console.log(brushPoints);
+      this.pointsList.push(brushPoints);
+    }
   },
 }
 </script>
