@@ -15,10 +15,26 @@
     </div>
 
     <div class="footer">
-      <a-button type="primary" @click="onDrawableToggle" >
+      <a-button @click="onDrawerShow">
+        {{ deviceText }}
+      </a-button>
+      <a-button type="primary" @click="onDrawableToggle">
         {{ drawableText }}
       </a-button>
     </div>
+    <a-drawer
+      title="设备选择"
+      placement="bottom"
+      :visible="drawerVisible"
+      @close="onDrawerClose"
+    >
+      <a-button
+        v-for="(device, index) in deviceList" :key="index"
+        @click="onDeviceSelect(device)"
+      >
+        {{ device }}
+      </a-button>
+    </a-drawer>
   </div>
 </template>
 
@@ -32,20 +48,36 @@ export default {
   },
   data() {
     return {
+      // canvas尺寸
       canvasWidth: 300,
       canvasHeight: 150,
+      // point数组
       pointsList: [],
       points: [],
-      isDrawable: true,
+      // 是否绘制状态
+      isDrawable: false,
+      // 是否绘制中
       isDrawing: false,
+      // 地图对象
       map: null,
       mapControls: {},
       lineLayer: null,
+      // 抽屉状态
+      drawerVisible: false,
+      deviceList: [
+        '设备1',
+        '设备2',
+        '设备3',
+      ],
+      selectedDevice: '',
     }
   },
   computed: {
     drawableText() {
       return this.isDrawable ? '绘制模式' : '控制模式';
+    },
+    deviceText() {
+      return this.selectedDevice ? this.selectedDevice : '选择设备';
     }
   },
   mounted() {
@@ -93,7 +125,7 @@ export default {
           geometries: [],
         });
 
-        this.freezeMap();
+        // this.freezeMap();
         this.map.on('touchstart', this.onMapDown);
         this.map.on('touchmove', this.onMapMove);
         this.map.on('touchend', this.onMapUp);
@@ -182,7 +214,16 @@ export default {
     clearCanvas() {
       this.$refs.drawCanvas.reset();
     },
-
+    onDrawerShow() {
+      this.drawerVisible = true;
+    },
+    onDrawerClose() {
+      this.drawerVisible = false;
+    },
+    onDeviceSelect(device) {
+      this.selectedDevice = device;
+      this.onDrawerClose();
+    },
   },
 }
 </script>
@@ -213,5 +254,7 @@ export default {
 
 .footer {
   margin-top: 20px;
+  display: flex;
+  justify-content: space-evenly;
 }
 </style>
