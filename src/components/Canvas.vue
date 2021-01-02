@@ -100,7 +100,7 @@ export default {
           y: canvasY,
           timestamp: new Date().getTime(),
         };
-        console.log(e);
+        // console.log(e);
         this.brushPoints.push(point);
       }
     },

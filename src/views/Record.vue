@@ -13,6 +13,12 @@
         ref="drawCanvas"
       />
     </div>
+
+    <div class="footer">
+      <a-button type="primary" @click="onDrawableToggle" >
+        {{ drawableText }}
+      </a-button>
+    </div>
   </div>
 </template>
 
@@ -20,6 +26,10 @@
 import Canvas from "../components/Canvas.vue";
 
 export default {
+  name: 'Record',
+  components: {
+    'draw-canvas': Canvas,
+  },
   data() {
     return {
       canvasWidth: 300,
@@ -29,11 +39,14 @@ export default {
       isDrawable: true,
       isDrawing: false,
       map: null,
+      mapControls: {},
       lineLayer: null,
     }
   },
-  components: {
-    'draw-canvas': Canvas,
+  computed: {
+    drawableText() {
+      return this.isDrawable ? '绘制模式' : '控制模式';
+    }
   },
   mounted() {
     this.initMap();
@@ -49,9 +62,14 @@ export default {
           zoom: 18,
           minZoom: 18,
           maxZoom: 20,
-          showControl: false,
+          showControl: true,
         });
         this.map = map;
+        this.mapControls = {
+          scale: this.map.getControl(TMap.constants.DEFAULT_CONTROL_ID.SCALE),
+          zoom: this.map.getControl(TMap.constants.DEFAULT_CONTROL_ID.ZOOM),
+          rotation: this.map.getControl(TMap.constants.DEFAULT_CONTROL_ID.ROTATION),
+        }
 
         this.lineLayer = new TMap.MultiPolyline({
           id: 'line-layer',
@@ -91,7 +109,7 @@ export default {
     onMapDown(e) {
       if (this.isDrawable) {
         // this.isDrawing = true;
-        this.points.push(e.latLng);
+        this.points.push({ ...e.latLng, time: new Date().getTime() });
         this.$refs.drawCanvas.canvasDown(e.originalEvent);
       }
     },
@@ -105,7 +123,7 @@ export default {
         //     paths: [ new TMap.LatLng(prevPoint.lat, prevPoint.lng), new TMap.LatLng(e.latLng.lat, e.latLng.lng) ],
         //   }
         // ]);
-        this.points.push(e.latLng);
+        this.points.push({ ...e.latLng, time: new Date().getTime() });
         this.$refs.drawCanvas.canvasMove(e.originalEvent);
       }
     },
@@ -135,12 +153,28 @@ export default {
       this.points = [];
       this.clearCanvas();
     },
+    onDrawableToggle() {
+      this.isDrawable = !this.isDrawable;
+      if (this.isDrawable) this.freezeMap();
+      else this.enableMap();
+    },
     freezeMap() {
+      const TMap = window.TMap;
+      this.map.removeControl(TMap.constants.DEFAULT_CONTROL_ID.SCALE);
+      this.map.removeControl(TMap.constants.DEFAULT_CONTROL_ID.ZOOM);
+      this.map.removeControl(TMap.constants.DEFAULT_CONTROL_ID.ROTATION);
+
       this.map.setDraggable(false);
       this.map.setScrollable(false);
       this.map.setDoubleClickZoom(false);
     },
     enableMap() {
+      const TMap = window.TMap;
+      var { scale, zoom, rotation } = this.mapControls;
+      this.map.addControl(scale);
+      this.map.addControl(zoom);
+      this.map.addControl(rotation);
+
       this.map.setDraggable(true);
       this.map.setScrollable(true);
       this.map.setDoubleClickZoom(true);
@@ -162,6 +196,7 @@ export default {
 
 .container {
   position: relative;
+  height: 100vw;
   .draw-canvas {
     position: absolute;
     left: 0;
@@ -174,5 +209,9 @@ export default {
     width: 100vw;
     height: 100vw;
   }
+}
+
+.footer {
+  margin-top: 20px;
 }
 </style>
