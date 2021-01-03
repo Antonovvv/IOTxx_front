@@ -28,12 +28,15 @@
       :visible="drawerVisible"
       @close="onDrawerClose"
     >
-      <a-button
-        v-for="(device, index) in deviceList" :key="index"
-        @click="onDeviceSelect(device)"
-      >
-        {{ device }}
-      </a-button>
+      <div class="device-list">
+        <a-button
+          class="device-btn"
+          v-for="(device, index) in deviceList" :key="index"
+          @click="onDeviceSelect(device)"
+        >
+          {{ device.name }}
+        </a-button>
+      </div>
     </a-drawer>
   </div>
 </template>
@@ -64,12 +67,8 @@ export default {
       lineLayer: null,
       // 抽屉状态
       drawerVisible: false,
-      deviceList: [
-        '设备1',
-        '设备2',
-        '设备3',
-      ],
-      selectedDevice: '',
+      deviceList: [],
+      selectedDevice: null,
     }
   },
   computed: {
@@ -77,12 +76,13 @@ export default {
       return this.isDrawable ? '绘制模式' : '控制模式';
     },
     deviceText() {
-      return this.selectedDevice ? this.selectedDevice : '选择设备';
+      return this.selectedDevice ? this.selectedDevice.name : '选择设备';
     }
   },
   mounted() {
     this.initMap();
     this.initCanvas();
+    this.getDevices();
   },
   methods: {
     initMap() {
@@ -138,6 +138,16 @@ export default {
         this.$refs.drawCanvas.init();
       });
     },
+    getDevices() {
+      this.$axios.get('/devices').then(res => {
+        console.log(res);
+        if (res.data.length > 0) {
+          this.deviceList = res.data;
+        }
+      }).catch(e => {
+        console.error(e);
+      });
+    },
     onMapDown(e) {
       if (this.isDrawable) {
         // this.isDrawing = true;
@@ -171,9 +181,10 @@ export default {
         this.clearCanvas();
         return;
       }
-      this.pointsList.push(this.points);
       const TMap = window.TMap;
-      const prevPoint = this.points[this.points.length - 1];
+
+      this.pointsList.push(this.points);
+      this.uploadRecord();
       this.lineLayer.add([
         {
           styleId: 'style_blue',
@@ -185,7 +196,23 @@ export default {
       this.points = [];
       this.clearCanvas();
     },
+    uploadRecord() {
+      if (!this.selectedDevice) return;
+      this.$axios.post('/records', {
+        deviceId: this.selectedDevice.device_id,
+        startTime: this.points[0].time,
+        points: this.points,
+      }).then(res => {
+        console.log(res);
+      }).catch(e => {
+        console.error(e);
+      })
+    },
     onDrawableToggle() {
+      if (!this.selectedDevice) {
+        alert('请选择设备');
+        return;
+      }
       this.isDrawable = !this.isDrawable;
       if (this.isDrawable) this.freezeMap();
       else this.enableMap();
@@ -215,6 +242,7 @@ export default {
       this.$refs.drawCanvas.reset();
     },
     onDrawerShow() {
+      this.getDevices();
       this.drawerVisible = true;
     },
     onDrawerClose() {
@@ -256,5 +284,12 @@ export default {
   margin-top: 20px;
   display: flex;
   justify-content: space-evenly;
+}
+
+.device-list {
+  .device-btn {
+    margin-right: 20px;
+    margin-bottom: 12px;
+  }
 }
 </style>
