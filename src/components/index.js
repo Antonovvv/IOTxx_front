@@ -5,6 +5,10 @@ import {
   Drawer,
   List,
   Form,
+  FormModel,
+  Input,
+  Select,
+  Modal,
 } from 'ant-design-vue';
 
 const components = [
@@ -14,6 +18,10 @@ const components = [
   Drawer,
   List,
   Form,
+  FormModel,
+  Input,
+  Select,
+  Modal,
 ];
 
 const install = function (Vue, option) {
