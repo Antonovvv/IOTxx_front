@@ -1,5 +1,5 @@
 <template>
-  <a-table :data-source="deviceList" scroll>
+  <a-table :data-source="deviceList" rowKey="device_id">
     
     <a-table-column key="name" title="设备名" data-index="name" />
     <a-table-column key="owner" title="拥有者" data-index="owner" />
