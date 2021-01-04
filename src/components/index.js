@@ -11,6 +11,7 @@ import {
   Modal,
   Descriptions,
   Table,
+  Checkbox,
 } from 'ant-design-vue';
 
 const components = [
@@ -26,6 +27,7 @@ const components = [
   Modal,
   Descriptions,
   Table,
+  Checkbox,
 ];
 
 const install = function (Vue, option) {
