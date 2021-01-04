@@ -1,5 +1,10 @@
 <template>
   <div class="nav">
+    <div class="header">
+      <a-icon class="header-icon" type="radar-chart" />
+      <a-icon class="header-icon" type="heat-map" />
+    </div>
+
     <a-menu mode="horizontal" v-model="current" @select="onNavSelect">
       <a-menu-item key="home">
         <a-icon type="home" />主页
@@ -41,5 +46,21 @@ export default {
   top: 0;
   left: 0;
   right: 0;
+  height: 48px;
+  z-index: 10000;
+
+  .header {
+    margin-left: 20px;
+    margin-right: 8px;
+    font-size: 24px;
+    color: #e5eecc;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    float: left;
+    &-icon {
+      margin-right: 12px;
+    }
+  }
 }
 </style>
