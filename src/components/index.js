@@ -9,6 +9,7 @@ import {
   Input,
   Select,
   Modal,
+  Table,
 } from 'ant-design-vue';
 
 const components = [
@@ -22,6 +23,8 @@ const components = [
   Input,
   Select,
   Modal,
+  Table,
+
 ];
 
 const install = function (Vue, option) {

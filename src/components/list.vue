@@ -1,4 +1,5 @@
 <template>
+
   <div
     v-infinite-scroll="handleInfiniteOnLoad"
     class="demo-infinite-container"
@@ -34,6 +35,7 @@ export default {
   directives: { infiniteScroll },
   data() {
     return {
+      deviceList:[] ,
       data:[],
       data1: [
       {device: 10001 ,users: "Ming",records:[]},
@@ -57,33 +59,17 @@ export default {
     });
   },
   methods: {
-    fetchData(callback) {
-      reqwest({
-        url: fakeDataUrl,
-        type: 'json',
-        method: 'get',
-        contentType: 'application/json',
-        success: res => {
-          callback(res);
-        },
+    getDevices() {
+      this.$axios.get('/devices').then(res => {
+        console.log(res);
+        if (res.data.length > 0) {
+          this.deviceList = res.data;
+        }
+      }).catch(e => {
+        console.error(e);
       });
     },
-    handleInfiniteOnLoad() {
-      const data = this.data;
-      this.loading = true;
-      if (data.length > 14) {
-        //this.$message.warning('Infinite List loaded all');
-        //alert("数据加载完了");
-        this.busy = true;
-        this.loading = false;
-        return;
-      }
-      this.fetchData(res => {
-        this.data = data.concat(res.results);
-        console.log(data);
-        this.loading = false;
-      });
-    },
+    
   },
 };
 </script>

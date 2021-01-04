@@ -11,20 +11,22 @@
       
     </div>
     
-    
-    <historyList></historyList>
+    <historyTable></historyTable>
+    <!-- <historyList></historyList> -->
   </div>
 </template>
 
 <script>
 import historyList from '@/components/list.vue' ;
 import form1 from '@/components/form1.vue' ;
+import historyTable from '@/components/antTable.vue' ;
 
 
 export default {
   components: {
-    historyList,
+    //historyList,
     form1,
+    historyTable,
   },
     
   data(){
