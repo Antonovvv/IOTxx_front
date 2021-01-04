@@ -261,6 +261,7 @@ export default {
   margin-top: 20px;
   margin-bottom: 20px;
   font-size: 20px;
+  text-align: center;
 }
 
 .container {

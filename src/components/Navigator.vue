@@ -1,6 +1,6 @@
 <template>
   <div class="nav">
-    <a-menu mode="horizontal" @select="onNavSelect">
+    <a-menu mode="horizontal" v-model="current" @select="onNavSelect">
       <a-menu-item key="home">
         <a-icon type="home" />主页
         <!-- <router-link to="/">Home</router-link> -->
@@ -18,14 +18,16 @@ export default {
   name: 'Nav',
   data() {
     return {
-
+      current: [this.$route.name.toLowerCase()],
     }
   },
   methods: {
-    onNavSelect({ item, key, selectedKeys }) {
+    onNavSelect({ item, key }) {
       if (key === 'home') {
+        this.current[0] = 'home';
         this.$router.push({ path: '/' });
       } else {
+        this.current[0] = key;
         this.$router.push({ path: key });
       }
     },

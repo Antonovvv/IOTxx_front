@@ -7,27 +7,47 @@
       :visible="drawerVisible"
       @close="onDrawerClose"
     >
-      <a-button type="primary" @click="onDeviceSelect">设备1</a-button>
+      <div class="device-list">
+        <a-button 
+          type="primary" class="device-btn"
+          v-for="(device, index) in deviceList" :key="index"
+          @click="onDeviceSelect(device)"
+        >
+          {{ device.name }}
+        </a-button>
+      </div>
       <a-drawer
         title="历史记录"
         placement="left"
         :visible="deepDrawerVisible"
         @close="onDeepDrawerClose"
       >
-        <div class="history-list">
+        <div class="record-list">
           <a-button
-            class="history-btn" type="primary"
-            v-for="(history, index) in historyList"
-            :key="index"
-            @click="onHistorySelect"
+            class="record-btn" type="primary"
+            v-for="(record, index) in selectedDevice.records" :key="index"
+            @click="onRecordSelect(record)"
           >
-            {{ history }}
+            {{ record.start_time }}
           </a-button>
         </div>
         
       </a-drawer>
     </a-drawer>
 
+    <div class="device-info">
+      <a-descriptions title="设备信息">
+        <a-descriptions-item label="设备名">
+          {{ selectedDevice.name || '无' }}
+        </a-descriptions-item>
+        <a-descriptions-item label="设备用户">
+          {{ selectedDevice.owner || '无' }}
+        </a-descriptions-item>
+        <a-descriptions-item label="当前记录">
+          {{ selectedRecord.start_time || '无' }}
+        </a-descriptions-item>
+      </a-descriptions>
+    </div>
     <div id="map" class="map"></div>
     <!-- <a-button @click="getCenter">get</a-button> -->
   </div>
@@ -47,41 +67,97 @@ export default {
       drawerVisible: false,
       deepDrawerVisible: false,
       map: null,
-      historyList: [
-        '2020.10.13',
-        '2020.10.12',
-      ]
+      trail: null,
+      deviceList: [],
+      selectedDevice: {},
+      selectedRecord: {},
     };
   },
   mounted() {
-    if (window.TMap) {
-      const TMap = window.TMap;
-      const center = new TMap.LatLng(30.51283206177366, 114.43127457409332);
-      const map = new TMap.Map(document.getElementById('map'), {
-        center: center,
-        zoom: 19,
-        minZoom: 18,
-        maxZoom: 20,
-      });
-      this.map = map;
-    }
+    this.getDevices();
+    this.initMap();
   },
   methods: {
+    initMap() {
+      if (window.TMap) {
+        const TMap = window.TMap;
+        const center = new TMap.LatLng(30.51283206177366, 114.43127457409332);
+        const map = new TMap.Map(document.getElementById('map'), {
+          center: center,
+          zoom: 19,
+          minZoom: 18,
+          maxZoom: 20,
+        });
+        this.map = map;
+      }
+    },
+    getDevices() {
+      this.$axios.get('/devices').then(res => {
+        console.log(res);
+        if (res.data.length > 0) {
+          this.deviceList = res.data;
+        }
+      }).catch(e => {
+        console.error(e);
+      });
+    },
+    initTrail(endTime) {
+      if (this.trail) this.trail.destroy();
+      const TMap = window.TMap;
+      const trail = new TMap.visualization.Trail({
+        pickStyle: (trailLine) => {
+          return { color: '#0000ff' };
+        },
+        showDuration: 10000,
+        startTime: 0,
+        endTime: endTime + 500,
+        playRate: 500,
+      }).addTo(this.map);
+      this.trail = trail;
+    },
+    showTrail() {
+      if (!this.selectedRecord.record_id) return;
+      this.$axios.get(`/records/${this.selectedRecord.record_id}`).then(res => {
+        console.log(res);
+        if (res.data.length > 0) {
+          const startTime = JSON.parse(res.data[0].data).time;
+          const endTime = JSON.parse(res.data[res.data.length - 1].data).time - startTime;
+          const pathData = res.data.map(point => {
+            let data = JSON.parse(point.data);
+            return [data.lat, data.lng, data.time - startTime];
+          });
+          console.log(pathData)
+          this.initTrail(endTime);
+          this.trail.setData([
+            {
+              style: 'blue',
+              path: pathData
+            },
+          ]);
+        }
+      }).catch(e => {
+        console.error(e);
+      });
+    },
     onDrawerShow() {
+      this.getDevices();
       this.drawerVisible = true;
     },
     onDrawerClose() {
       this.drawerVisible = false;
     },
-    onDeviceSelect() {
+    onDeviceSelect(device) {
+      this.selectedDevice = device;
       this.deepDrawerVisible = true;
     },
     onDeepDrawerClose() {
       this.deepDrawerVisible = false;
     },
-    onHistorySelect() {
+    onRecordSelect(record) {
+      this.selectedRecord = record;
       this.deepDrawerVisible = false;
       this.drawerVisible = false;
+      this.showTrail();
     },
     getCenter() {
       var pos = this.map.getCenter();
@@ -103,16 +179,25 @@ export default {
     top: 100px;
   }
   
+  .device-info {
+    display: block;
+    width: 80vw;
+    margin-top: 20px;
+  }
   .map {
     width: 80vw;
-    height: 80vh;
+    height: calc( 80vh - 20px );
   }
 }
-.history-list {
+
+.record-list, .device-list {
   display: flex;
   flex-direction: column;
-  .history-btn {
+  .record-btn, .device-btn {
     margin-bottom: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 </style>

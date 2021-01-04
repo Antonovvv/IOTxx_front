@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import reqwest from 'reqwest';
 import infiniteScroll from 'vue-infinite-scroll';
 const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';
 export default {
@@ -58,15 +57,15 @@ export default {
   },
   methods: {
     fetchData(callback) {
-      reqwest({
-        url: fakeDataUrl,
-        type: 'json',
-        method: 'get',
-        contentType: 'application/json',
-        success: res => {
-          callback(res);
-        },
-      });
+      // reqwest({
+      //   url: fakeDataUrl,
+      //   type: 'json',
+      //   method: 'get',
+      //   contentType: 'application/json',
+      //   success: res => {
+      //     callback(res);
+      //   },
+      // });
     },
     handleInfiniteOnLoad() {
       const data = this.data;
