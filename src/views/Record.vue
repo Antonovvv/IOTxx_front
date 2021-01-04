@@ -140,7 +140,6 @@ export default {
     },
     getDevices() {
       this.$axios.get('/devices').then(res => {
-        console.log(res);
         if (res.data.length > 0) {
           this.deviceList = res.data;
         }

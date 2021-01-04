@@ -119,7 +119,6 @@ export default {
     },
     getDevices() {
       this.$axios.get('/devices').then(res => {
-        console.log(res);
         if (res.data.length > 0) {
           this.deviceList = res.data;
         }
@@ -162,7 +161,6 @@ export default {
     showTrail() {
       if (!this.selectedRecord.record_id) return;
       this.$axios.get(`/records/${this.selectedRecord.record_id}`).then(res => {
-        console.log(res);
         if (res.data.length > 0) {
           const startTime = JSON.parse(res.data[0].data).time;
           const endTime = JSON.parse(res.data[res.data.length - 1].data).time - startTime;
@@ -170,7 +168,6 @@ export default {
             let data = JSON.parse(point.data);
             return [data.lat, data.lng, data.time - startTime];
           });
-          console.log(pathData)
           this.initTrail(endTime);
           this.trail.setData([
             {
@@ -188,7 +185,6 @@ export default {
       Promise.all(this.checkedRecord.map(recordId => {
         return this.$axios.get(`/records/${recordId}`);
       })).then(results => {
-        console.log(results)
         this.initHeat();
         let points = [];
         results.forEach(res => {

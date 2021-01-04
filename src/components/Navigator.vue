@@ -5,7 +5,7 @@
       <a-icon class="header-icon" type="heat-map" />
     </div>
 
-    <a-menu mode="horizontal" v-model="current" @select="onNavSelect">
+    <a-menu mode="horizontal" :selectedKeys="current" @select="onNavSelect">
       <a-menu-item key="home">
         <a-icon type="home" />主页
         <!-- <router-link to="/">Home</router-link> -->
@@ -26,13 +26,28 @@ export default {
       current: [this.$route.name.toLowerCase()],
     }
   },
+  watch: {
+    $route: {
+      handler(route) {
+        this.$nextTick(() => {
+          this.current = [route.name.toLowerCase()];
+        })
+      },
+      immediate: true,
+      deep: true,
+    }
+  },
+  mounted() {
+    console.log('mo')
+  },
   methods: {
     onNavSelect({ item, key }) {
+      if (key == this.current[0]) return;
       if (key === 'home') {
-        this.current[0] = 'home';
+        // this.current[0] = 'home';
         this.$router.push({ path: '/' });
       } else {
-        this.current[0] = key;
+        // this.current[0] = key;
         this.$router.push({ path: key });
       }
     },
