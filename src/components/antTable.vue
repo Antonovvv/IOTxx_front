@@ -4,7 +4,7 @@
     <a-table-column key="name" title="设备名" data-index="name" />
     <a-table-column key="owner" title="拥有者" data-index="owner" />
     <a-table-column key="records.length" title="数据记录(条)" data-index="records.length" />
-    <a-table-column key="action" title="操作">
+    <!-- <a-table-column key="action" title="操作">
       <template slot-scope="text, record">
         <span>
           <a-button type="primary" ghost>查看数据</a-button>&nbsp;
@@ -12,7 +12,7 @@
           <a-button type="danger" ghost>清除信息</a-button>
         </span>
       </template>
-    </a-table-column>
+    </a-table-column> -->
   </a-table>
 </template>
 <script>
