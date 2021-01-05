@@ -2,10 +2,10 @@
   <div>
     <h2 >用户设备表</h2>
     <div id="button" >
-      <a-button id="search" icon="search">查找信息</a-button>
+      <!-- <a-button id="search" icon="search">查找信息</a-button> -->
       <a-button id="add" icon="plus" @click="showModal" >增加设备</a-button>
 
-      <a-modal v-model="modalVisible" title="增加设备" :footer="null" @ok="handleOk">
+      <a-modal v-model="modalVisible" title="增加设备"  @ok="handleOk">
          <form1/>
       </a-modal>
       
