@@ -62,7 +62,7 @@ export default {
   left: 0;
   right: 0;
   height: 48px;
-  z-index: 10000;
+  z-index: 1000;
 
   .header {
     margin-left: 20px;

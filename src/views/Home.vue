@@ -128,6 +128,7 @@ export default {
     },
     initTrail(endTime) {
       if (this.trail) this.trail.destroy();
+      if (this.heat) this.heat.hide();
       const TMap = window.TMap;
       const trail = new TMap.visualization.Trail({
         pickStyle: (trailLine) => {
@@ -142,6 +143,7 @@ export default {
     },
     initHeat() {
       if (this.heat) this.heat.destroy();
+      if (this.trail) this.trail.hide();
       const TMap = window.TMap;
       const heat = new TMap.visualization.Heat({
         max: 40, // 热力最强阈值
