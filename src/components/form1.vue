@@ -47,6 +47,7 @@ methods: {
       }).then(res => {
         console.log(res);
         alert("创建成功");
+        this.$emit('create');
         this.modalVisible = false;
       }).catch(e => {
         console.error(e);

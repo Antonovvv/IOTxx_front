@@ -6,12 +6,12 @@
       <a-button id="add" icon="plus" @click="showModal" >增加设备</a-button>
 
       <a-modal v-model="modalVisible" title="增加设备" @ok="handleOk">
-         <form1/>
+        <form1 @create="onDeviceCreate" />
       </a-modal>
       
     </div>
     
-    <historyTable></historyTable>
+    <historyTable ref="deviceTable" />
     <!-- <historyList></historyList> -->
   </div>
 </template>
@@ -46,6 +46,9 @@ export default {
       console.log(e);
       this.modalVisible = false;
     },
+    onDeviceCreate() {
+      this.$refs.deviceTable.getDevices();
+    }
   }
 }
 </script>
