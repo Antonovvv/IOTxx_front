@@ -140,7 +140,6 @@ export default {
     },
     getDevices() {
       this.$axios.get('/devices').then(res => {
-        console.log(res);
         if (res.data.length > 0) {
           this.deviceList = res.data;
         }
@@ -261,6 +260,7 @@ export default {
   margin-top: 20px;
   margin-bottom: 20px;
   font-size: 20px;
+  text-align: center;
 }
 
 .container {
